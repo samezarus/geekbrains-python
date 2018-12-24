@@ -1,73 +1,105 @@
 #!/usr/bin/env python3
 # coding: utf-8
 
-# EXTRA
-# Есть два словаря. Один это рецепт блюда, второй это список продуктов, которые есть в ходильнике.
+# Задание-1
+
+# Написать консольное меню вида:
+
+# 1. Добавить
+# 2. Удалить
+# 3. Распечатать
+# 4. Посчитать
+# 5. Выйти
+
+# Надо чтобы
+# а) Можно было удобно менять порядок меню и\или добавлять\удалять пункты меню
+# б) Каждое действие (добавить, удалить и тд) должно быть функцией
+# в) У пользователя надо спросить номер команды
+# г) Программа не должна завершаться пока не введется команда Выйти
+# д) Проверять на ввод ошибочных данных, там где они могут появиться
+
+import os
+import time
+
+def StrIsInt(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+def ClearScren():
+    #os.system('clear') # nix
+    os.system('cls') # win
+
+class TMainMenu:
+
+    Items = []
+    Functions = []
+    ExitCode = 0
+
+    def __init__(self):
+        pass
+
+    def AddItem(self, Caption):
+        self.Items.append(Caption)
+
+    def PrintItems(self):
+        ClearScren()
+        for i in range(len(self.Items)):
+            print(str(i + 1) + '. ' + self.Items[i])
+
+    def ItemClick (self, index, txt):
+        self.Functions[index](txt)
+
+# ------------------------------------------------
+MainMenu = TMainMenu()
+MainMenu.ExitCode = 5
 #
-# Ключ это название продукта, значение - это количество.
+Captions = []
+Captions.append('Добавить')
+Captions.append('Удалить')
+Captions.append('Распечатать')
+Captions.append('Посчитать')
+Captions.append('Выйти')
+# Только не надо мне говорить, что функции одинаковые ) Лёгким движением руки они смогут выполнять различные действия :P
+def FAdd (val):
+    print('>  Действие "' + val + '" выполнено')
+def FDelete (val):
+    print('>  Действие "' + val + '" выполнено')
+def FPrint (val):
+    print('>  Действие "' + val + '" выполнено')
+def FCalc (val):
+    print('>  Действие "' + val + '" выполнено')
+def FExit (val):
+    print('>  Действие "' + val + '" выполнено')
 #
-# Нужно сравнить два словаря и дать словарь, в котором будет список покупок
-# Если для рецепта всё есть, то сказать что ничего не нужно
-# Разницей по измерению гр, мл, шт. Пренебречь
+MainMenu.Functions.append(FAdd)
+MainMenu.Functions.append(FDelete)
+MainMenu.Functions.append(FPrint)
+MainMenu.Functions.append(FCalc)
+MainMenu.Functions.append(FExit)
+#
+for i in range(len(Captions)):
+    MainMenu.AddItem(Captions[i])
+#
+value = 0
+while value != MainMenu.ExitCode:
+    MainMenu.PrintItems()
+    s = input('Выберите нужный пунк меню: ')
 
-# Рецепт акрошки
-#Prescription = {1: 11, 2: 12, 3: 13}
-Prescription = {}
-Prescription['Квас']      = 3
-Prescription['Огурцы']    = 10
-Prescription['Яйца']      = 15
-Prescription['Лук']       = 0.5
-Prescription['Сосиски']   = 2
-Prescription['Картофель'] = 1
-Prescription['Редис']     = 1
-Prescription['Соль']      = 0.1
-Prescription['Сахар']     = 0.2
+    if StrIsInt(s) is True:
+        value = int(s)
 
-# Продукты в холодильнике
-ProductsInBox = {}
-ProductsInBox['Квас']      = 1.5
-ProductsInBox['Огурцы']    = 3
-ProductsInBox['Яйца']      = 10
-ProductsInBox['Лук']       = 0
-ProductsInBox['Сосиски']   = 1
-ProductsInBox['Картофель'] = 0
-ProductsInBox['Редис']     = 0.1
-ProductsInBox['Соль']      = 1
-ProductsInBox['Сахар']     = 1
-
-# Список покупок
-ShoppingList = {}
-
-print ('Рецепт акрошки:')
-for item in Prescription:
-    key   = item
-    value = Prescription.get(item)
-
-    ShoppingList[key] = value
-
-    print ('    ' + key + ': ' + str(value))
-
-print ('---------------------------------')
-
-print ('Продукты в холодильнике:')
-for item in ProductsInBox:
-    key   = item
-    value = ProductsInBox.get(item)
-
-    value2 = ShoppingList.get(key) # Ищем в холодильнике количество продукта из рецепта
-    if value2 != None:
-        i = value2 -value
-        if i > 0:
-            ShoppingList[key] = i
-        if i < 0:
-            ShoppingList[key] = 0
-
-    print ('    ' + key + ': ' + str(value))
-
-print ('---------------------------------')
-
-print ('Список покупок:')
-for item in ShoppingList:
-    key   = item
-    value = ShoppingList.get(item)
-    print ('    ' + key + ': ' + str(value))
+        if (value < len(MainMenu.Items) + 1) and (value > 0):
+            print('')
+            MainMenu.ItemClick(value -1, MainMenu.Items[value -1])
+            time.sleep(1)
+        else:
+            print('')
+            print ('>  Введён не верный пунк меню')
+            time.sleep(1)
+    else:
+        print('')
+        print ('>  Пунк меню может быть только числом')
+        time.sleep(1)
